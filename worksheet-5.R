@@ -1,36 +1,47 @@
 ## Getting started
 
 library(dplyr)
-library(...)
-animals <- read.csv(..., na.strings = '') %>%
+library(ggplot2)
+
+#open an filter out null values
+animals <- read.csv('data/animals.csv', na.strings = '') %>%
   filter(!is.na(species_id), !is.na(sex), !is.na(weight))
 
 ## Constructing layered graphics in ggplot
 
-ggplot(...,
-       ...) +
-  ...
+#scatter plot of wt x spp
+ggplot(animals, #The data frame
+       aes( x =species_id, y = weight)) + #Aesthetics
+       geom_point() # what to show on the plot
 
+#box plot of same data; just change the "geom" object
 ggplot(data = animals,
        aes(x = species_id, y = weight)) +
-  ...
+       geom_boxplot()
+  
 
+#Combining multiple geometries
+#Use points layer to show aggregate stat 
 ggplot(data = animals,
        aes(x = species_id, y = weight)) +
-  geom_boxplot() ...
-  geom_point(...,
-             ...,
-             ...)
+  geom_boxplot() +
+  geom_point(stat = "summary",
+             fun.y = "mean",
+             color = "red")
 
+#Other aesthetics: color each species differently
 ggplot(data = animals,
-       aes(x = species_id, y = weight, ...)) +
+       aes(x = species_id, y = weight, color=species_id)) +
   geom_boxplot() +
   geom_point(stat = 'summary',
              fun.y = 'mean')
 
 ## Exercise 1
-
-...
+dfDM = filter(animals, species_id == 'DM')
+ggplot(data = dfDM,
+       aes(x = year, y = weight, color=sex)) +
+       geom_line(stat = 'summary',
+                 fun.y = 'mean')
 
 ## Adding a regression line
 
